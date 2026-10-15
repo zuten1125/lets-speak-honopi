@@ -24,6 +24,7 @@
  <div class="grid">
  <button class="btn white tile" data-theme="food"><span>🍎</span>たべもの</button><button class="btn white tile" data-theme="animals"><span>🐶</span>どうぶつ</button>
  <button class="btn white tile" data-theme="vehicles"><span>🚗</span>のりもの</button><button class="btn white tile" data-theme="colors"><span>🌈</span>いろ</button>
+ <button class="btn white tile" data-theme="body"><span>👀</span>からだ</button><button class="btn white tile" data-theme="things"><span>⚽</span>みのまわり</button>
  </div>
 </section>
 <section id="game" class="hidden">
@@ -43,10 +44,12 @@
 (() => {
 const $=id=>document.getElementById(id);
 const data={
-food:[['🍎','apple','りんご'],['🍌','banana','バナナ'],['🍓','strawberry','いちご'],['🍰','cake','ケーキ'],['🥛','milk','ぎゅうにゅう']],
-animals:[['🐶','dog','いぬ'],['🐱','cat','ねこ'],['🐰','rabbit','うさぎ'],['🐻','bear','くま'],['🐸','frog','かえる']],
-vehicles:[['🚗','car','くるま'],['🚌','bus','バス'],['🚂','train','でんしゃ'],['✈️','airplane','ひこうき'],['🚲','bike','じてんしゃ']],
-colors:[['🔴','red','あか'],['🔵','blue','あお'],['🟡','yellow','きいろ'],['🟢','green','みどり'],['🟣','purple','むらさき']]
+food:[['🍎','apple','りんご'],['🍌','banana','バナナ'],['🍓','strawberry','いちご'],['🍰','cake','ケーキ'],['🥛','milk','ぎゅうにゅう'],['🍞','bread','パン'],['🧀','cheese','チーズ'],['🥚','egg','たまご'],['🍊','orange','オレンジ'],['🍦','ice cream','アイスクリーム']],
+animals:[['🐶','dog','いぬ'],['🐱','cat','ねこ'],['🐰','rabbit','うさぎ'],['🐻','bear','くま'],['🐸','frog','かえる'],['🐘','elephant','ぞう'],['🦒','giraffe','きりん'],['🐵','monkey','さる'],['🦁','lion','ライオン'],['🐼','panda','パンダ']],
+vehicles:[['🚗','car','くるま'],['🚌','bus','バス'],['🚂','train','でんしゃ'],['✈️','airplane','ひこうき'],['🚲','bike','じてんしゃ'],['🚕','taxi','タクシー'],['🚒','fire truck','しょうぼうしゃ'],['🚑','ambulance','きゅうきゅうしゃ'],['🚢','ship','ふね'],['🚁','helicopter','ヘリコプター']],
+colors:[['🔴','red','あか'],['🔵','blue','あお'],['🟡','yellow','きいろ'],['🟢','green','みどり'],['🟣','purple','むらさき'],['⚫','black','くろ'],['⚪','white','しろ'],['🩷','pink','ピンク'],['🟤','brown','ちゃいろ'],['🟠','orange','オレンジ']],
+body:[['👀','eyes','め'],['👃','nose','はな'],['👄','mouth','くち'],['👂','ears','みみ'],['✋','hand','て'],['🦶','foot','あし'],['💇','hair','かみ'],['🦷','teeth','は'],['🤚','arm','うで'],['🦵','leg','あし']],
+things:[['⚽','ball','ボール'],['📚','book','ほん'],['🪑','chair','いす'],['🛏️','bed','ベッド'],['🚪','door','ドア'],['👟','shoes','くつ'],['🎒','bag','かばん'],['🧸','teddy bear','ぬいぐるみ'],['⏰','clock','とけい'],['☂️','umbrella','かさ']]
 };
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let theme='food',deck=[],index=0,stars=0,correct=new Set(),recognition=null,active=false,locked=false,session=0;
