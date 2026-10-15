@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e7f7ff">
+<meta name="description" content="5歳向け、聞いてまねする英語学習アプリ">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Let's Speak! えいごであそぼう</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e7f7ff;color:#194d78;font-family:system-ui,-apple-system,sans-serif}main{max-width:520px;margin:auto;padding:16px;min-height:100dvh}.hero{background:linear-gradient(#b5ecff,#f5fdff);border-radius:24px;text-align:center;padding:24px 10px}.hero .faces{font-size:48px}.brand{font-size:clamp(34px,9vw,46px);font-weight:950;color:#ff9d30}.sub{font-size:21px;font-weight:850}.panel{background:#fff;border-radius:22px;padding:18px;text-align:center;margin-top:12px}.btn{font:inherit;font-weight:850;border:0;border-radius:17px;padding:14px;cursor:pointer;touch-action:manipulation}.yellow{background:#ffce49;color:#704900}.blue{background:#42b4ed;color:white}.green{background:#50c779;color:white}.white{background:white;color:#194d78;border:2px solid #cce7f5}.wide{width:100%;margin-top:10px}.hidden{display:none!important}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tile{padding:15px 5px;line-height:1.7}.tile span{font-size:36px;display:block}.emoji{font-size:90px;line-height:1.25}.word{font-size:clamp(36px,10vw,50px);font-weight:950}.status{min-height:54px;padding:12px 2px;font-weight:800;white-space:pre-line}.muted{color:#527b97;font-size:13px}.top{display:flex;justify-content:space-between;align-items:center;gap:8px}.btn:disabled{opacity:.55}
+</style>
+</head>
+<body><main>
+<section id="home">
+ <div class="hero"><div class="faces">🐻 🌈 🐰</div><div class="brand">Let's Speak!</div><div class="sub">えいごで あそぼう！</div><p>きいて・まねして・ほしをゲット！</p></div>
+ <div class="panel">⭐ せいかいした ことば：<b id="scorehome">0</b></div>
+ <button id="start" class="btn yellow wide" style="font-size:22px">▶ はじめる！</button>
+ <p class="muted" style="text-align:center">マイクを使うときは、おうちの人といっしょにね。</p>
+</section>
+<section id="themes" class="hidden">
+ <button id="homebutton" class="btn white">← ホーム</button><h2 style="text-align:center">どのテーマであそぶ？</h2>
+ <div class="grid">
+ <button class="btn white tile" data-theme="food"><span>🍎</span>たべもの</button><button class="btn white tile" data-theme="animals"><span>🐶</span>どうぶつ</button>
+ <button class="btn white tile" data-theme="vehicles"><span>🚗</span>のりもの</button><button class="btn white tile" data-theme="colors"><span>🌈</span>いろ</button>
+ </div>
+</section>
+<section id="game" class="hidden">
+ <div class="top"><button id="back" class="btn white">← テーマ</button><b id="count">1 / 5</b><b id="stars">⭐ 0</b></div>
+ <div class="panel"><div>🔊 おてほんをきいてね！</div><div id="emoji" class="emoji">🍎</div><div id="word" class="word">apple</div><div id="meaning">りんご</div><button id="listen" class="btn blue wide">🔊 おてほんをきく</button></div>
+ <div class="panel"><b>🎤 まねして いってみよう！</b><button id="mic" class="btn blue wide">🎙️ マイクをおして はなす</button><div id="status" class="status" aria-live="polite">声に出してチャレンジしよう！</div><button id="retry" class="btn white wide">🔁 もういちど</button></div>
+ <button id="next" class="btn green wide hidden">つぎの ことばへ →</button><button id="skip" class="btn white wide">つぎへ →</button>
+ <p class="muted" style="text-align:center">音声認識の結果で判定します。発音の上手さを採点するものではありません。</p>
+</section>
+<section id="result" class="hidden" style="text-align:center">
+ <div style="font-size:65px;padding-top:20px">🎉🏆🎉</div><h2>がんばったね！</h2><div class="panel"><div id="resultscore" style="font-size:35px;font-weight:900">0 / 5</div><div id="resultstars" style="font-size:30px"></div><p>えいごで あそべたね！</p></div>
+ <button id="again" class="btn green wide">🔁 もういちど</button><button id="resultback" class="btn blue wide">🏠 ホームへ</button>
+</section>
+<p class="muted" style="text-align:center;margin-top:20px">たのしく、ゆっくり、なんどでも！</p>
+</main>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const data={
+food:[['🍎','apple','りんご'],['🍌','banana','バナナ'],['🍓','strawberry','いちご'],['🍰','cake','ケーキ'],['🥛','milk','ぎゅうにゅう']],
+animals:[['🐶','dog','いぬ'],['🐱','cat','ねこ'],['🐰','rabbit','うさぎ'],['🐻','bear','くま'],['🐸','frog','かえる']],
+vehicles:[['🚗','car','くるま'],['🚌','bus','バス'],['🚂','train','でんしゃ'],['✈️','airplane','ひこうき'],['🚲','bike','じてんしゃ']],
+colors:[['🔴','red','あか'],['🔵','blue','あお'],['🟡','yellow','きいろ'],['🟢','green','みどり'],['🟣','purple','むらさき']]
+};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let theme='food',deck=[],index=0,stars=0,correct=new Set(),recognition=null,active=false,locked=false,session=0;
+function show(name){['home','themes','game','result'].forEach(n=>$(n).classList.toggle('hidden',n!==name))}
+function cancel(){session++;if(recognition){try{recognition.abort()}catch(e){}recognition=null}active=false}
+function speak(text){if(!window.speechSynthesis){$('status').textContent='このブラウザでは音声再生を使えません。';return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.78;u.pitch=1.05;speechSynthesis.speak(u)}
+function render(){const w=deck[index];locked=false;$('emoji').textContent=w[0];$('word').textContent=w[1];$('meaning').textContent=w[2];$('count').textContent=`${index+1} / ${deck.length}`;$('stars').textContent='⭐ '+stars;$('status').textContent='おてほんをきいて、声に出してみよう！';$('status').style.color='#194d78';$('mic').disabled=false;$('mic').textContent='🎙️ マイクをおして はなす';$('next').classList.add('hidden');$('skip').classList.remove('hidden')}
+function start(t){cancel();if(window.speechSynthesis)speechSynthesis.cancel();theme=t;deck=data[t].slice();index=0;stars=0;correct=new Set();$('scorehome').textContent='0';render();show('game')}
+function judge(ok,heard,token){if(token!==session||locked)return;locked=true;active=false;recognition=null;$('mic').disabled=false;$('mic').textContent='🎙️ もういちど はなす';$('status').textContent=(heard?'きこえたことば：'+heard+'\\n':'')+(ok?'🎉 せいかい！すごいね！':'😊 おしい！おてほんをきいて、もういちど！');$('status').style.color=ok?'#138348':'#a86b00';if(ok){if(!correct.has(index)){correct.add(index);stars++;$('stars').textContent='⭐ '+stars;$('scorehome').textContent=stars}$('next').classList.remove('hidden');$('skip').classList.add('hidden');speak('Great job!')}}
+function advance(){cancel();if(window.speechSynthesis)speechSynthesis.cancel();if(index<deck.length-1){index++;render()}else{show('result');$('resultscore').textContent=stars+' / '+deck.length;$('resultstars').textContent='⭐'.repeat(stars)+'☆'.repeat(deck.length-stars)}}
+$('start').onclick=()=>show('themes');$('homebutton').onclick=()=>show('home');$('back').onclick=()=>{cancel();show('themes')};
+document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>start(b.dataset.theme));
+$('listen').onclick=()=>speak(deck[index][1]);
+$('mic').onclick=()=>{
+ if(active){cancel();$('mic').textContent='🎙️ もういちど はなす';return}
+ if(!SR){$('status').textContent='このブラウザは音声認識に対応していません。Chromeで開き、HTTPSのページで試してください。';return}
+ cancel();const token=session,expected=deck[index][1].toLowerCase();
+ try{const r=new SR();recognition=r;r.lang='en-US';r.maxAlternatives=5;r.interimResults=false;r.continuous=false;active=true;locked=false;$('status').textContent='きいているよ！ゆっくり はなしてね。';$('mic').textContent='🔴 きいているよ…';
+ r.onresult=e=>{if(token!==session)return;const a=e.results[0],norm=s=>s.toLowerCase().replace(/[^a-z\\s]/g,'').trim().replace(/\\s+/g,' ');let ok=false;for(let i=0;i<a.length;i++)if(norm(a[i].transcript)===expected)ok=true;judge(ok,a[0].transcript,token)};
+ r.onerror=e=>{if(token!==session)return;active=false;recognition=null;$('mic').textContent='🎙️ もういちど はなす';$('status').textContent=e.error==='not-allowed'?'マイクの使用を許可してください。':'うまくきこえなかったよ。もういちどやってみよう！'};
+ r.onend=()=>{if(token===session){active=false;if(!locked)$('mic').textContent='🎙️ もういちど はなす'}};r.start()
+ }catch(e){active=false;recognition=null;$('status').textContent='マイクを開始できません。Chromeのマイク許可を確認してください。'}
+};
+$('retry').onclick=()=>{cancel();locked=false;$('mic').disabled=false;$('next').classList.add('hidden');$('skip').classList.remove('hidden');$('status').textContent='おてほんをきいて、もういちど！';speak(deck[index][1])};
+$('next').onclick=advance;$('skip').onclick=advance;$('again').onclick=()=>start(theme);$('resultback').onclick=()=>{cancel();show('home')};
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script>
+</body></html>

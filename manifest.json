@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "Let's Speak! えいごであそぼう",
+  "short_name": "Let's Speak!",
+  "description": "聞いてまねする子供向け英語学習アプリ",
+  "lang": "ja",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e7f7ff",
+  "theme_color": "#e7f7ff",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
